@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/gin-gonic/gin v1.7.7
 	github.com/parnurzeal/gorequest v0.2.16
+	github.com/spf13/pflag v1.0.5
 )
 
 require (

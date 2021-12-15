@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/parnurzeal/gorequest"
+	"github.com/spf13/pflag"
 )
 
 const (
@@ -20,9 +22,8 @@ type trafficClonesResp struct {
 }
 
 type req struct {
-	GitUser  string `form:"git_user" binding:"required"`
-	GitRepo  string `form:"git_repo" binding:"required"`
-	GitToken string `form:"git_token" binding:"required"`
+	GitUser string `form:"git_user" binding:"required"`
+	GitRepo string `form:"git_repo" binding:"required"`
 }
 
 // reference: https://shields.io/endpoint
@@ -38,6 +39,15 @@ type errResponse struct {
 }
 
 func main() {
+	var githubToken string
+	pflag.StringVarP(&githubToken, "token", "t", "", "Your github personal access token(https://github.com/settings/tokens)")
+	pflag.Parse()
+
+	if githubToken == "" {
+		fmt.Fprint(os.Stderr, "must provide your github token by flag --token/-t")
+		os.Exit(1)
+	}
+
 	r := gin.Default()
 
 	r.GET("/v1/repo-traffic-clones", func(c *gin.Context) {
@@ -52,7 +62,7 @@ func main() {
 		var trafficClonesResp trafficClonesResp
 
 		request := gorequest.New().Get(fmt.Sprintf(githubTrafficClonesURLTemplate, r.GitUser, r.GitRepo))
-		request.Set("Authorization", "token "+r.GitToken)
+		request.Set("Authorization", "token "+githubToken)
 
 		resp, _, errs := request.EndStruct(&trafficClonesResp)
 		if len(errs) != 0 {
