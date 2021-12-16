@@ -1,23 +1,23 @@
 # traffic-clones-api
 
-For https://shields.io/endpoint
+An apiserver for <https://shields.io/endpoint>.
 
 ## Description
 
-An rest API that used to count how many times a certain repository of your github has been cloned.
+Provides a rest API that used to count how many times a certain repository of your github has been cloned.
 
-## Deployment
+## Deployment Server
 
-Login your cloud server(like aws EC2) first. Then
+Login your cloud server(like aws EC2) first.
 
-1. Generate a github personal access token
+#### 1. Generate a github personal access token
 
 Access this page <https://github.com/settings/tokens>,
 and press button `Generate new token` to generate your access token.
 
 For example, the generated access token is `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`.
 
-2. Deploy backend api server `traffic-clones-api`
+#### 2. Deploy backend api server `traffic-clones-api`
 
 ```sh
 $ git clone --depth 1 https://github.com/windvalley/traffic-clones-api
@@ -30,7 +30,7 @@ $ go build
 $ nohup ./traffic-clones-api -t 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 &
 ```
 
-3. Deploy https server by [Caddy](https://github.com/caddyserver/caddy)
+#### 3. Deploy https proxy server by [Caddy](https://github.com/caddyserver/caddy)
 
 Assume that your domain name `api.sre.im` has been resolved to your cloud server IP.
 
@@ -64,7 +64,7 @@ EOF
 $ nohup caddy run &
 ```
 
-4. Test the deployment
+#### 4. Test the deployment
 
 Request the url `https://api.sre.im/v1/repo-traffic-clones?git_user=your-github-username&git_repo=your-github-repo`
 
@@ -79,17 +79,21 @@ The response should be:
 }
 ```
 
-## Create your repo clones badge
+## Create the badge
 
-1. Open <https://shields.io/endpoint> in browser explorer.
+#### 1. Open <https://shields.io/endpoint> in browser explorer
 
-2. Generate the finnal badge url
+#### 2. Generate the final badge url
 
 Add the url `https://api.sre.im/v1/repo-traffic-clones?git_user=your-github-username&git_repo=your-github-repo` in `url` blank.
 
 Then click `Copy Badge URL` to copy it to system clipboard.
 
 Finally, add your badge link `![clones](the content of system clipboard)` to the `README.md` of your github repo.
+
+The badge will be shown as:
+
+![clones](https://img.shields.io/endpoint?url=https%3A%2F%2Fapi.sre.im%2Fv1%2Frepo-traffic-clones%3Fgit_user%3Dwindvalley%26git_repo%3Dgossh%26git_token%3D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)
 
 ## License
 
