@@ -1,10 +1,19 @@
 # traffic-clones-api
 
 An apiserver for <https://shields.io/endpoint>.
+Get the total number of clones and the total number of unique clones of your github repo.
 
 ## Description
 
-Provides a rest API that used to count how many times a certain repository of your github has been cloned.
+Provides:
+
+- traffic clones total count api:
+
+  `/v1/github/traffic/clones/total?git_user=&git_repo=&type=count&label=clones-total`
+
+- traffic clones total uniques api:
+
+  `/v1/github/traffic/clones/total?git_user=&git_repo=&type=uniques&label=clones-uniques`
 
 ## Deployment Server
 
@@ -66,14 +75,14 @@ $ nohup caddy run &
 
 #### 4. Test the deployment
 
-Request the url `https://api.sre.im/v1/repo-traffic-clones?git_user=your-github-username&git_repo=your-github-repo`
+Request the url `https://api.sre.im/v1/github/traffic/clones/total?git_user=your-github-username&git_repo=your-github-repo&type=count-or-uniques&label=clones-xxx`
 
 The response should be:
 
 ```json
 {
   "schemaVersion": 1,
-  "label": "clones",
+  "label": "clones-xxx",
   "message": "1728",
   "color": "orange"
 }
@@ -85,15 +94,15 @@ The response should be:
 
 #### 2. Generate the final badge url
 
-Add the url `https://api.sre.im/v1/repo-traffic-clones?git_user=your-github-username&git_repo=your-github-repo` in `url` blank.
+Add the url `https://api.sre.im/v1/github/traffic/clones/total?git_user=your-github-username&git_repo=your-github-repo&type=count-or-uniques&label=clones-xxx` in `url` blank.
 
 Then click `Copy Badge URL` to copy it to system clipboard.
 
-Finally, add your badge link `![clones](the content of system clipboard)` to the `README.md` of your github repo.
+Finally, add your badge link `![traffic clones total](the content of system clipboard)` to the `README.md` of your github repo.
 
 The badge will be shown as:
 
-![clones](https://img.shields.io/endpoint?url=https%3A%2F%2Fapi.sre.im%2Fv1%2Frepo-traffic-clones%3Fgit_user%3Dwindvalley%26git_repo%3Dgossh%26git_token%3D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)
+[![Traffic Clones Total](https://img.shields.io/endpoint?url=https%3A%2F%2Fapi.sre.im%2Fv1%2Fgithub%2Ftraffic%2Fclones%2Ftotal%3Fgit_user%3Dwindvalley%26git_repo%3Dgossh%26type%3Dcount%26label%3Dclones-total)](https://github.com/windvalley/traffic-clones-api)
 
 ## License
 
