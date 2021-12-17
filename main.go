@@ -10,14 +10,15 @@ import (
 )
 
 const (
-	trafficClonesLabel = "clones"
+	typeClones = "clones"
 )
 
 type req struct {
 	GitUser string `form:"git_user" binding:"required"`
 	GitRepo string `form:"git_repo" binding:"required"`
 	// "count" or "uniques"
-	Type string `form:"type" binding:"required"`
+	Type  string `form:"type" binding:"required"`
+	Label string `form:"label" binding:"required"`
 }
 
 // reference: https://shields.io/endpoint
@@ -87,7 +88,7 @@ func main() {
 
 		c.JSON(200, response{
 			SchemaVersion: 1,
-			Label:         trafficClonesLabel,
+			Label:         r.Label,
 			Message:       strconv.Itoa(typeTotal),
 			Color:         "orange",
 		})

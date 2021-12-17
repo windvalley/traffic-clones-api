@@ -53,7 +53,7 @@ func updateGithubTrafficClones(githubClones []clonesItem, user, repoName string)
 			"user = ? and repo_name = ? and type = ? and timestamp = ?",
 			user,
 			repoName,
-			trafficClonesLabel,
+			typeClones,
 			v.Timestamp,
 		).First(&record).Error
 
@@ -61,7 +61,7 @@ func updateGithubTrafficClones(githubClones []clonesItem, user, repoName string)
 			recordNew := &githubTraffic{
 				User:      user,
 				RepoName:  repoName,
-				Type:      trafficClonesLabel,
+				Type:      typeClones,
 				Uniques:   v.Uniques,
 				Count:     v.Count,
 				Timestamp: v.Timestamp,
@@ -87,7 +87,7 @@ func getClonesTotal(user, repoName string) *clonesTotal {
 		"select sum(count) as count, sum(uniques) as uniques from github_traffic where user=? and repo_name=? and type=?",
 		user,
 		repoName,
-		trafficClonesLabel,
+		typeClones,
 	).Scan(&total)
 
 	return &total
