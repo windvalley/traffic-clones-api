@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"log"
+	"time"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -46,6 +47,8 @@ type clonesTotal struct {
 }
 
 func updateGithubTrafficClones(githubClones []clonesItem, user, repoName string) {
+	todayTimestamp := time.Now().Format("2006-01-02") + "T00:00:00Z"
+
 	for _, v := range githubClones {
 		var record githubTraffic
 
@@ -72,10 +75,12 @@ func updateGithubTrafficClones(githubClones []clonesItem, user, repoName string)
 			continue
 		}
 
-		record.Uniques = v.Uniques
-		record.Count = v.Count
-		if err := db.Save(&record).Error; err != nil {
-			log.Printf("update %v failed: %v", record, err)
+		if v.Timestamp == todayTimestamp {
+			record.Uniques = v.Uniques
+			record.Count = v.Count
+			if err := db.Save(&record).Error; err != nil {
+				log.Printf("update %v failed: %v", record, err)
+			}
 		}
 	}
 }
