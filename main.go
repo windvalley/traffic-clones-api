@@ -6,24 +6,18 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/parnurzeal/gorequest"
 	"github.com/spf13/pflag"
 )
 
 const (
-	githubTrafficClonesURLTemplate = "https://api.github.com/repos/%s/%s/traffic/clones"
-	trafficClonesLabel             = "clones"
+	trafficClonesLabel = "clones"
 )
-
-type trafficClonesResp struct {
-	Count   int           `json:"count"`
-	Uniques int           `json:"uniques"`
-	Clones  []interface{} `json:"clones"`
-}
 
 type req struct {
 	GitUser string `form:"git_user" binding:"required"`
 	GitRepo string `form:"git_repo" binding:"required"`
+	// "count" or "uniques"
+	Type string `form:"type" binding:"required"`
 }
 
 // reference: https://shields.io/endpoint
@@ -40,7 +34,13 @@ type errResponse struct {
 
 func main() {
 	var githubToken string
-	pflag.StringVarP(&githubToken, "token", "t", "", "Your github personal access token(https://github.com/settings/tokens)")
+	pflag.StringVarP(
+		&githubToken,
+		"token",
+		"t",
+		"",
+		"Your github personal access token(https://github.com/settings/tokens)",
+	)
 	pflag.Parse()
 
 	if githubToken == "" {
@@ -48,9 +48,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	r := gin.Default()
+	router := gin.Default()
 
-	r.GET("/v1/repo-traffic-clones", func(c *gin.Context) {
+	router.GET("/v1/github/traffic/clones/total", func(c *gin.Context) {
 		var r req
 		if err := c.ShouldBindQuery(&r); err != nil {
 			c.JSON(400, errResponse{
@@ -59,26 +59,39 @@ func main() {
 			return
 		}
 
-		var trafficClonesResp trafficClonesResp
-
-		request := gorequest.New().Get(fmt.Sprintf(githubTrafficClonesURLTemplate, r.GitUser, r.GitRepo))
-		request.Set("Authorization", "token "+githubToken)
-
-		resp, _, errs := request.EndStruct(&trafficClonesResp)
-		if len(errs) != 0 {
+		githubClones, err := getGithubTrafficClones(r.GitUser, r.GitRepo, githubToken)
+		if err != nil {
 			c.JSON(500, errResponse{
-				Message: fmt.Sprintf("github api resp: %v, errors: %v", resp, errs),
+				Message: err.Error(),
 			})
+
+			return
+		}
+
+		updateGithubTrafficClones(githubClones.Clones, r.GitUser, r.GitRepo)
+
+		total := getClonesTotal(r.GitUser, r.GitRepo)
+
+		var typeTotal int
+		if r.Type == "count" {
+			typeTotal = total.Count
+		} else if r.Type == "uniques" {
+			typeTotal = total.Uniques
+		} else {
+			c.JSON(400, errResponse{
+				Message: "type must be 'count' or 'uniques'",
+			})
+
 			return
 		}
 
 		c.JSON(200, response{
 			SchemaVersion: 1,
 			Label:         trafficClonesLabel,
-			Message:       strconv.Itoa(trafficClonesResp.Count),
+			Message:       strconv.Itoa(typeTotal),
 			Color:         "orange",
 		})
 	})
 
-	_ = r.Run(":9000")
+	_ = router.Run(":9000")
 }
