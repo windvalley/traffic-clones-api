@@ -1,5 +1,8 @@
 # traffic-clones-api
 
+[![Traffic Clones Total](https://img.shields.io/endpoint?url=https%3A%2F%2Fapi.sre.im%2Fv1%2Fgithub%2Ftraffic%2Fclones%2Ftotal%3Fgit_user%3Dwindvalley%26git_repo%3Dtraffic-clones-api%26type%3Dcount%26label%3Dclones-total)](https://github.com/windvalley/traffic-clones-api)
+[![Traffic Clones Uniques](https://img.shields.io/endpoint?url=https%3A%2F%2Fapi.sre.im%2Fv1%2Fgithub%2Ftraffic%2Fclones%2Ftotal%3Fgit_user%3Dwindvalley%26git_repo%3Dtraffic-clones-api%26type%3Duniques%26label%3Dclones-uniques)](https://github.com/windvalley/traffic-clones-api)
+
 An apiserver for <https://shields.io/endpoint>.
 Get the total number of clones and the total number of unique clones of your github repo.
 
@@ -102,7 +105,7 @@ Finally, add your badge link `![traffic clones total](the content of system clip
 
 The badge will be shown as:
 
-[![Traffic Clones Total](https://img.shields.io/endpoint?url=https%3A%2F%2Fapi.sre.im%2Fv1%2Fgithub%2Ftraffic%2Fclones%2Ftotal%3Fgit_user%3Dwindvalley%26git_repo%3Dgossh%26type%3Dcount%26label%3Dclones-total)](https://github.com/windvalley/traffic-clones-api)
+[![Traffic Clones Total](https://img.shields.io/endpoint?url=https%3A%2F%2Fapi.sre.im%2Fv1%2Fgithub%2Ftraffic%2Fclones%2Ftotal%3Fgit_user%3Dwindvalley%26git_repo%3Dtraffic-clones-api%26type%3Dcount%26label%3Dclones-total)](https://github.com/windvalley/traffic-clones-api)
 
 ## License
 
